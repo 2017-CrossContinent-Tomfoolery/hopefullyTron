@@ -6,7 +6,9 @@
 package tronplease;
 
 import environment.Environment;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -15,38 +17,47 @@ import java.awt.event.MouseEvent;
  * @author Benjamin
  */
 class hopefullyTron extends Environment {
-
+    
+    //<editor-fold defaultstate="collapsed" desc="Constants">
+    private static final int GRID_ROWS = 100;
+    private static final int GRID_COLS = 50;
+    private static final int GRID_DIMENSION = 10;
+    private static final Point GRID_ANCHOR = new Point(0, 0);
+//</editor-fold>
+    
     public hopefullyTron() {
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
     public void initializeEnvironment() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        grid = new Grid(GRID_ROWS, GRID_COLS, GRID_DIMENSION, GRID_ANCHOR, Color.BLACK);
     }
-
+    
     @Override
     public void timerTaskHandler() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void keyPressedHandler(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void keyReleasedHandler(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void environmentMouseClicked(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void paintEnvironment(Graphics graphics) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (grid != null) {
+            grid.drawGrid(graphics);
+        }
     }
+//</editor-fold>
+    
+    private Grid grid;
     
 }
