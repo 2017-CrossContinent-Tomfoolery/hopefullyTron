@@ -41,6 +41,18 @@ class hopefullyTron extends Environment implements GridDrawData {
     
     @Override
     public void keyPressedHandler(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+                playerBike.setLocation(new Point(playerBike.getLocation().x - 1, playerBike.getLocation().y));
+            }
+            if (e.getKeyCode() == KeyEvent.VK_D) {
+                playerBike.setLocation(new Point(playerBike.getLocation().x + 1, playerBike.getLocation().y));
+            }
+            if (e.getKeyCode() == KeyEvent.VK_S) {
+                playerBike.setLocation(new Point(playerBike.getLocation().x, playerBike.getLocation().y + 1));
+            }
+            if (e.getKeyCode() == KeyEvent.VK_W) {
+                playerBike.setLocation(new Point(playerBike.getLocation().x, playerBike.getLocation().y - 1));
+            }
     }
     
     @Override
