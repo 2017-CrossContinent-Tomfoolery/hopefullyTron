@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
  *
  * @author Benjamin
  */
-class hopefullyTron extends Environment {
+class hopefullyTron extends Environment implements GridDrawData {
     
     //<editor-fold defaultstate="collapsed" desc="Constants">
     private static final int GRID_ROWS = 100;
@@ -32,6 +32,7 @@ class hopefullyTron extends Environment {
     @Override
     public void initializeEnvironment() {
         grid = new Grid(GRID_ROWS, GRID_COLS, GRID_DIMENSION, GRID_ANCHOR, Color.BLACK);
+        playerBike = new TronBike(new Point(20, 20), Direction.UP, this);
     }
     
     @Override
@@ -54,10 +55,37 @@ class hopefullyTron extends Environment {
     public void paintEnvironment(Graphics graphics) {
         if (grid != null) {
             grid.drawGrid(graphics);
+//            graphics.fillOval(grid.getCellSystemCoordinates(3, 3).x, grid.getCellSystemCoordinates(3, 3).y, grid.getDimension(), grid.getDimension());
+        }
+        if (playerBike != null) {
+            playerBike.drawBike(graphics);
         }
     }
 //</editor-fold>
     
     private Grid grid;
+    private TronBike playerBike;
+
+    //<editor-fold defaultstate="collapsed" desc="GridDrawData Abstract Methods">
+    @Override
+    public int getCellDimension() {
+        return grid.getDimension();
+    }
+    
+    @Override
+    public int getColumns() {
+        return grid.getColumns();
+    }
+    
+    @Override
+    public int getRows() {
+        return grid.getRows();
+    }
+    
+    @Override
+    public Point getCellSystemCoordinate(Point cellCoordinate) {
+        return grid.getCellSystemCoordinates(cellCoordinate);
+    }
+//</editor-fold>
     
 }

@@ -12,7 +12,7 @@ import environment.ApplicationStarter;
  *
  * @author Benjamin
  */
-public class TronPlease {
+public class Tron {
 
     /**
      * @param args the command line arguments

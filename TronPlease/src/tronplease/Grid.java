@@ -57,6 +57,14 @@ class Grid {
         }
     }
     
+    public Point getCellSystemCoordinates(int x, int y) {
+        return new Point(anchor.x + x * dimension, anchor.y + y* dimension);
+    }
+    
+    public Point getCellSystemCoordinates(Point point) {
+        return getCellSystemCoordinates(point.x, point.y);
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Properties">
     private int columns;
     private int rows;
