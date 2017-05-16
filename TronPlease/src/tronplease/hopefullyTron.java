@@ -17,14 +17,21 @@ import java.awt.event.MouseEvent;
  * @author Benjamin
  */
 class hopefullyTron extends Environment {
-
+    
+    //<editor-fold defaultstate="collapsed" desc="Constants">
+    private static final int GRID_ROWS = 100;
+    private static final int GRID_COLS = 50;
+    private static final int GRID_DIMENSION = 10;
+    private static final Point GRID_ANCHOR = new Point(0, 0);
+//</editor-fold>
+    
     public hopefullyTron() {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
     public void initializeEnvironment() {
-        grid = new Grid(100, 50, 10, new Point(0, 0), Color.BLACK);
+        grid = new Grid(GRID_ROWS, GRID_COLS, GRID_DIMENSION, GRID_ANCHOR, Color.BLACK);
     }
     
     @Override
