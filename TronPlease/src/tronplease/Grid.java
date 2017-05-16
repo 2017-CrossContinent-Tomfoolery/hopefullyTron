@@ -61,6 +61,12 @@ class Grid {
         return new Point(anchor.x + x * dimension, anchor.y + y* dimension);
     }
     
+    /**
+     * getCellSystemCoordinates takes a readable grid coordinate point 
+     * and converts it into the coordinates on the screen. This is useful when drawing
+     * @param point is the grid coordinate
+     * @return the coordinates on the screen
+     */
     public Point getCellSystemCoordinates(Point point) {
         return getCellSystemCoordinates(point.x, point.y);
     }

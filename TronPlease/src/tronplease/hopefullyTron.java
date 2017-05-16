@@ -20,9 +20,10 @@ class hopefullyTron extends Environment implements GridDrawData {
     
     //<editor-fold defaultstate="collapsed" desc="Constants">
     private static final int GRID_ROWS = 100;
-    private static final int GRID_COLS = 50;
-    private static final int GRID_DIMENSION = 10;
+    private static final int GRID_COLS = 150;
+    private static final int GRID_DIMENSION = 6;
     private static final Point GRID_ANCHOR = new Point(0, 0);
+    private static final Point PLAYER_STARTING_LOCATION = new Point(20, 20);
 //</editor-fold>
     
     public hopefullyTron() {
@@ -31,8 +32,8 @@ class hopefullyTron extends Environment implements GridDrawData {
     //<editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
     public void initializeEnvironment() {
-        grid = new Grid(GRID_ROWS, GRID_COLS, GRID_DIMENSION, GRID_ANCHOR, Color.BLACK);
-        playerBike = new TronBike(new Point(20, 20), Direction.UP, this);
+        grid = new Grid(GRID_COLS, GRID_ROWS, GRID_DIMENSION, GRID_ANCHOR, Color.BLACK);
+        playerBike = new TronBike(PLAYER_STARTING_LOCATION, Direction.UP, this);
     }
     
     @Override
@@ -42,16 +43,16 @@ class hopefullyTron extends Environment implements GridDrawData {
     @Override
     public void keyPressedHandler(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_A) {
-                playerBike.setLocation(new Point(playerBike.getLocation().x - 1, playerBike.getLocation().y));
+                playerBike.moveLeft();
             }
             if (e.getKeyCode() == KeyEvent.VK_D) {
-                playerBike.setLocation(new Point(playerBike.getLocation().x + 1, playerBike.getLocation().y));
+                playerBike.moveRight();
             }
             if (e.getKeyCode() == KeyEvent.VK_S) {
-                playerBike.setLocation(new Point(playerBike.getLocation().x, playerBike.getLocation().y + 1));
+                playerBike.moveDown();
             }
             if (e.getKeyCode() == KeyEvent.VK_W) {
-                playerBike.setLocation(new Point(playerBike.getLocation().x, playerBike.getLocation().y - 1));
+                playerBike.moveUp();
             }
     }
     

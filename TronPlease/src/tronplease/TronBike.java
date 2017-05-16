@@ -29,6 +29,22 @@ public class TronBike {
         Point anchor = drawData.getCellSystemCoordinate(location);
         graphics.fillOval(anchor.x, anchor.y, drawData.getCellDimension(), drawData.getCellDimension());
     }
+    
+    public void moveLeft() {
+        location = new Point(location.x - 1, location.y);
+    }
+    
+    public void moveRight() {
+        location = new Point(location.x + 1, location.y);
+    }
+    
+    public void moveUp() {
+        location = new Point(location.x, location.y - 1);
+    }
+    
+    public void moveDown() {
+        location = new Point(location.x, location.y + 1);
+    }
 
     //<editor-fold defaultstate="collapsed" desc="Setters/Getters">
     /**
