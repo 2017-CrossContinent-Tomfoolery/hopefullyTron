@@ -21,7 +21,7 @@ class hopefullyTron extends Environment implements GridDrawData {
     //<editor-fold defaultstate="collapsed" desc="Constants">
     private static final int GRID_ROWS = 100;
     private static final int GRID_COLS = 150;
-    private static final int GRID_DIMENSION = 6;
+    private static final int GRID_DIMENSION = 5;
     private static final Point GRID_ANCHOR = new Point(20, 20);
     private static final Point PLAYER_STARTING_LOCATION = new Point(20, 20);
     private static final int MOVE_DELAY_TIME = 2;
@@ -35,6 +35,13 @@ class hopefullyTron extends Environment implements GridDrawData {
     public void initializeEnvironment() {
         grid = new Grid(GRID_COLS, GRID_ROWS, GRID_DIMENSION, GRID_ANCHOR, Color.GRAY);
         playerBike = new TronBike(PLAYER_STARTING_LOCATION, Direction.UP, this);
+        
+        tronArena = new int[GRID_COLS][GRID_ROWS];
+        for (int col = 0; col < GRID_COLS; col++) {
+            for (int row = 0; row < GRID_ROWS; row++) {
+                tronArena[col][row] = 0;
+            }
+        }
     }
 
     @Override
@@ -42,6 +49,7 @@ class hopefullyTron extends Environment implements GridDrawData {
         if (playerBike != null) {
             if (timerDelay == MOVE_DELAY_TIME) {
                 playerBike.move();
+                tronArena[playerBike.getLocation().x][playerBike.getLocation().y] = 1;
                 timerDelay = 0;
             }
             timerDelay++;
@@ -52,16 +60,24 @@ class hopefullyTron extends Environment implements GridDrawData {
     public void keyPressedHandler(KeyEvent e) {
         if (playerBike != null) {
             if (e.getKeyCode() == KeyEvent.VK_A) {
-                playerBike.setDirection(Direction.LEFT);
+                if (playerBike.getDirection() != Direction.RIGHT) {
+                    playerBike.setDirection(Direction.LEFT);
+                }
             }
             if (e.getKeyCode() == KeyEvent.VK_D) {
-                playerBike.setDirection(Direction.RIGHT);
+                if (playerBike.getDirection() != Direction.LEFT) {
+                    playerBike.setDirection(Direction.RIGHT);
+                }
             }
             if (e.getKeyCode() == KeyEvent.VK_S) {
-                playerBike.setDirection(Direction.DOWN);
+                if (playerBike.getDirection() != Direction.UP) {
+                    playerBike.setDirection(Direction.DOWN);
+                }
             }
             if (e.getKeyCode() == KeyEvent.VK_W) {
-                playerBike.setDirection(Direction.UP);
+                if (playerBike.getDirection() != Direction.DOWN) {
+                    playerBike.setDirection(Direction.UP);
+                }
             }
         }
     }
@@ -77,8 +93,11 @@ class hopefullyTron extends Environment implements GridDrawData {
     @Override
     public void paintEnvironment(Graphics graphics) {
         if (grid != null) {
-            grid.drawGrid(graphics);
+            grid.drawBorder(graphics);
 //            graphics.fillOval(grid.getCellSystemCoordinates(3, 3).x, grid.getCellSystemCoordinates(3, 3).y, grid.getDimension(), grid.getDimension());
+        }
+        if (tronArena != null) {
+            drawTronArena(graphics);
         }
         graphics.setColor(Color.RED);
         if (playerBike != null) {
@@ -86,11 +105,28 @@ class hopefullyTron extends Environment implements GridDrawData {
         }
     }
 //</editor-fold>
+    
+    public void drawTronArena(Graphics graphics) {
+        for (int col = 0; col < tronArena.length; col++) {
+            for (int row = 0; row < tronArena[row].length; row++) {
+                switch (tronArena[col][row]) {
+                    case 0:
+                        break;
+                    case 1:
+                        graphics.setColor(new Color(255, 150, 150));
+                        graphics.fillRect(GRID_ANCHOR.x + GRID_DIMENSION * col, GRID_ANCHOR.y + GRID_DIMENSION * row, 
+                        GRID_DIMENSION, GRID_DIMENSION);
+                        break;
+                }
+            }
+        }
+    }
 
     private Grid grid;
     private TronBike playerBike;
 
     private int timerDelay = 0;
+    private int[][] tronArena;
 
     //<editor-fold defaultstate="collapsed" desc="GridDrawData Abstract Methods">
     @Override
@@ -113,5 +149,4 @@ class hopefullyTron extends Environment implements GridDrawData {
         return grid.getCellSystemCoordinates(cellCoordinate);
     }
 //</editor-fold>
-
 }
