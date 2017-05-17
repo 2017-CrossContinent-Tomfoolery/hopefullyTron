@@ -33,6 +33,7 @@ public class TronBike {
     }
 
     public void move() {
+        
         switch (direction) {
             case UP:
                 moveUp();

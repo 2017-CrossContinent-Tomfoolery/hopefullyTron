@@ -57,6 +57,11 @@ class Grid {
         }
     }
     
+    public void drawBorder(Graphics graphics) {
+        graphics.setColor(color);
+        graphics.drawRect(anchor.x, anchor.y, dimension * columns, dimension * rows);
+    }
+    
     public Point getCellSystemCoordinates(int x, int y) {
         return new Point(anchor.x + x * dimension, anchor.y + y* dimension);
     }
