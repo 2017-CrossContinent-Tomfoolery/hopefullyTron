@@ -17,15 +17,17 @@ public class TronBike {
     public TronBike() {
     }
 
-    public TronBike(Point location, Direction direction, GridDrawData drawData) {
+    public TronBike(Point location, Direction direction, GridDrawData drawData, BikeProjectedLocationValidatorIntf projectedLocationValidator) {
         this.location = location;
         this.direction = direction;
         this.drawData = drawData;
+        this.projectedLocationValidator = projectedLocationValidator;
     }
 
     private Point location;
     private Direction direction;
     private GridDrawData drawData;
+    private BikeProjectedLocationValidatorIntf projectedLocationValidator;
 
     public void drawBike(Graphics graphics) {
         Point anchor = drawData.getCellSystemCoordinate(location);
@@ -33,21 +35,23 @@ public class TronBike {
     }
 
     public void move() {
-        
+        Point projectedLocation = getLocation();
         switch (direction) {
             case UP:
-                moveUp();
+                projectedLocation = new Point(location.x, location.y - 1);
                 break;
             case DOWN:
-                moveDown();
-                break;
-            case RIGHT:
-                moveRight();
+                projectedLocation = new Point(location.x, location.y + 1);
                 break;
             case LEFT:
-                moveLeft();
+                projectedLocation = new Point(location.x - 1, location.y);
+                break;
+            case RIGHT:
+                projectedLocation = new Point(location.x + 1, location.y);
                 break;
         }
+
+        projectedLocationValidator.validateLocation(new BikeAndLocation(this, projectedLocation));
     }
 
     public void moveLeft() {
@@ -115,6 +119,14 @@ public class TronBike {
      */
     public void setDrawData(GridDrawData drawData) {
         this.drawData = drawData;
+    }
+
+    public BikeProjectedLocationValidatorIntf getProjectedLocationValidator() {
+        return projectedLocationValidator;
+    }
+
+    public void setProjectedLocationValidator(BikeProjectedLocationValidatorIntf projectedLocationValidator) {
+        this.projectedLocationValidator = projectedLocationValidator;
     }
 //</editor-fold>
 

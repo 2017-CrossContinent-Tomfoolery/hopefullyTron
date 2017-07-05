@@ -15,7 +15,7 @@ import java.awt.event.MouseEvent;
  *
  * @author Benjamin
  */
-class hopefullyTron extends Environment implements GridDrawData {
+class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLocationValidatorIntf {
 
     //<editor-fold defaultstate="collapsed" desc="Constants">
     private static final int GRID_ROWS = 100;
@@ -26,18 +26,18 @@ class hopefullyTron extends Environment implements GridDrawData {
     private static final Point PLAYER_STARTING_LOCATION = new Point(20, 20);
 
     private static final int MOVE_DELAY_TIME = 2;
-    private static final int SHIMMER_CONTROL_MAX_VALUE = 55;
-    private static final int SHIMMER_CONTROL_INTERVAL = 5;
+    private static final int SHIMMER_CONTROL_MAX_VALUE = 30;
+    private static final int SHIMMER_CONTROL_INTERVAL = 3;
 //</editor-fold>
 
-    public hopefullyTron() {
+    public HopefullyTron() {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
     public void initializeEnvironment() {
         grid = new Grid(GRID_COLS, GRID_ROWS, GRID_DIMENSION, GRID_ANCHOR, Color.GRAY);
-        playerBike = new TronBike(PLAYER_STARTING_LOCATION, Direction.UP, this);
+        playerBike = new TronBike(PLAYER_STARTING_LOCATION, Direction.UP, this, this);
         
         tronArena = new int[GRID_COLS][GRID_ROWS];
         for (int col = 0; col < GRID_COLS; col++) {
@@ -147,7 +147,7 @@ class hopefullyTron extends Environment implements GridDrawData {
     private TronBike playerBike;
 
     private int timerDelay = 0;
-    private int shimmerControl = -55;
+    private int shimmerControl = -SHIMMER_CONTROL_MAX_VALUE;
 
     private int[][] tronArena;
 
@@ -173,6 +173,18 @@ class hopefullyTron extends Environment implements GridDrawData {
     }
 //</editor-fold>
 
+    //<editor-fold desc="BikeProjectedLocationValidatorIntf Abstract Methods">
+    @Override
+    public BikeAndLocation validateLocation(BikeAndLocation data) {
+        if  (data.getProjectedLocation().x >= 0 && data.getProjectedLocation().x <= GRID_COLS && data.getProjectedLocation().y >= 0 && data.getProjectedLocation().y <= GRID_ROWS ) {
+            data.getTronBike().setLocation(data.getProjectedLocation());
+        }
+
+
+        return data;
+    }
+    //</editor-fold>
+
     public int getScreenWidth() {
         return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
     }
@@ -180,5 +192,6 @@ class hopefullyTron extends Environment implements GridDrawData {
     public int getScreenHeight() {
         return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
     }
+
 
 }

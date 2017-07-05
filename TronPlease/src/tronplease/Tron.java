@@ -18,7 +18,7 @@ public class Tron {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ApplicationStarter.run("Pheonix", new hopefullyTron());
+        ApplicationStarter.run("Pheonix", new HopefullyTron());
     }
     
 }
