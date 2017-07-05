@@ -24,7 +24,10 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
     private static final Point GRID_ANCHOR = new Point(20, 20);
 
     private static final Point PLAYER1_STARTING_LOCATION = new Point(20, 20);
+    private static final Color PLAYER1_BIKE_COLOR = Color.red;
+
     private static final Point PLAYER2_STARTING_LOCATION = new Point(GRID_COLS - 20, 20);
+    private static final Color PLAYER2_BIKE_COLOR = new Color(34, 150, 50);
 
     private static final int MOVE_DELAY_TIME = 2;
     private static final int SHIMMER_CONTROL_MAX_VALUE = 30;
@@ -42,6 +45,7 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
 
         // Bike1 initialization
         player1Bike = new TronBike(PLAYER1_STARTING_LOCATION, Direction.UP, this, this);
+        // Bike2 initialization
         player2Bike = new TronBike(PLAYER2_STARTING_LOCATION, Direction.UP, this, this);
 
         // tronArena initialization
@@ -153,11 +157,11 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
         }
 
         if (player1Bike != null) {
-            graphics.setColor(Color.red);
+            graphics.setColor(PLAYER1_BIKE_COLOR);
             player1Bike.drawBike(graphics);
         }
         if (player2Bike != null) {
-            graphics.setColor(Color.green);
+            graphics.setColor(PLAYER2_BIKE_COLOR);
             player2Bike.drawBike(graphics);
         }
     }
