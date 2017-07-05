@@ -23,7 +23,8 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
     private static final int GRID_DIMENSION = 5;
     private static final Point GRID_ANCHOR = new Point(20, 20);
 
-    private static final Point PLAYER_STARTING_LOCATION = new Point(20, 20);
+    private static final Point PLAYER1_STARTING_LOCATION = new Point(20, 20);
+    private static final Point PLAYER2_STARTING_LOCATION = new Point(GRID_COLS - 20, 20);
 
     private static final int MOVE_DELAY_TIME = 2;
     private static final int SHIMMER_CONTROL_MAX_VALUE = 30;
@@ -36,9 +37,14 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
     //<editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
     public void initializeEnvironment() {
+        // Grid initialization
         grid = new Grid(GRID_COLS, GRID_ROWS, GRID_DIMENSION, GRID_ANCHOR, Color.GRAY);
-        playerBike = new TronBike(PLAYER_STARTING_LOCATION, Direction.UP, this, this);
-        
+
+        // Bike1 initialization
+        player1Bike = new TronBike(PLAYER1_STARTING_LOCATION, Direction.UP, this, this);
+        player2Bike = new TronBike(PLAYER2_STARTING_LOCATION, Direction.UP, this, this);
+
+        // tronArena initialization
         tronArena = new int[GRID_COLS][GRID_ROWS];
         for (int col = 0; col < GRID_COLS; col++) {
             for (int row = 0; row < GRID_ROWS; row++) {
@@ -49,43 +55,68 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
 
     @Override
     public void timerTaskHandler() {
-        if (playerBike != null) {
-            if (timerDelay == MOVE_DELAY_TIME) {
-                playerBike.move();
-                tronArena[playerBike.getLocation().x][playerBike.getLocation().y] = 1;
-                timerDelay = 0;
-                shimmerControl += SHIMMER_CONTROL_INTERVAL;
+        if (timerDelay == MOVE_DELAY_TIME) {
+            if (player1Bike != null) {
+                player1Bike.move();
+                tronArena[player1Bike.getLocation().x][player1Bike.getLocation().y] = 1;
             }
-            if (shimmerControl == SHIMMER_CONTROL_MAX_VALUE) {
-                shimmerControl = -SHIMMER_CONTROL_MAX_VALUE;
+            if (player2Bike != null) {
+                player2Bike.move();
+                tronArena[player2Bike.getLocation().x][player2Bike.getLocation().y] = 2;
             }
-            timerDelay++;
-
-
+            timerDelay = 0;
+            shimmerControl += SHIMMER_CONTROL_INTERVAL;
         }
+        if (shimmerControl == SHIMMER_CONTROL_MAX_VALUE) {
+            shimmerControl = -SHIMMER_CONTROL_MAX_VALUE;
+        }
+        timerDelay++;
     }
 
     @Override
     public void keyPressedHandler(KeyEvent e) {
-        if (playerBike != null) {
+        if (player1Bike != null) {
             if (e.getKeyCode() == KeyEvent.VK_A) {
-                if (playerBike.getDirection() != Direction.RIGHT) {
-                    playerBike.setDirection(Direction.LEFT);
+                if (player1Bike.getDirection() != Direction.RIGHT) {
+                    player1Bike.setDirection(Direction.LEFT);
                 }
             }
             if (e.getKeyCode() == KeyEvent.VK_D) {
-                if (playerBike.getDirection() != Direction.LEFT) {
-                    playerBike.setDirection(Direction.RIGHT);
+                if (player1Bike.getDirection() != Direction.LEFT) {
+                    player1Bike.setDirection(Direction.RIGHT);
                 }
             }
             if (e.getKeyCode() == KeyEvent.VK_S) {
-                if (playerBike.getDirection() != Direction.UP) {
-                    playerBike.setDirection(Direction.DOWN);
+                if (player1Bike.getDirection() != Direction.UP) {
+                    player1Bike.setDirection(Direction.DOWN);
                 }
             }
             if (e.getKeyCode() == KeyEvent.VK_W) {
-                if (playerBike.getDirection() != Direction.DOWN) {
-                    playerBike.setDirection(Direction.UP);
+                if (player1Bike.getDirection() != Direction.DOWN) {
+                    player1Bike.setDirection(Direction.UP);
+                }
+            }
+        }
+
+        if (player2Bike != null) {
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                if (player2Bike.getDirection() != Direction.RIGHT) {
+                    player2Bike.setDirection(Direction.LEFT);
+                }
+            }
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                if (player2Bike.getDirection() != Direction.LEFT) {
+                    player2Bike.setDirection(Direction.RIGHT);
+                }
+            }
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                if (player2Bike.getDirection() != Direction.UP) {
+                    player2Bike.setDirection(Direction.DOWN);
+                }
+            }
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
+                if (player2Bike.getDirection() != Direction.DOWN) {
+                    player2Bike.setDirection(Direction.UP);
                 }
             }
         }
@@ -120,9 +151,14 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
         if (tronArena != null) {
             drawTronArena(graphics);
         }
-        graphics.setColor(Color.red);
-        if (playerBike != null) {
-            playerBike.drawBike(graphics);
+
+        if (player1Bike != null) {
+            graphics.setColor(Color.red);
+            player1Bike.drawBike(graphics);
+        }
+        if (player2Bike != null) {
+            graphics.setColor(Color.green);
+            player2Bike.drawBike(graphics);
         }
     }
 //</editor-fold>
@@ -138,13 +174,20 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
                         graphics.fillRect(GRID_ANCHOR.x + GRID_DIMENSION * col, GRID_ANCHOR.y + GRID_DIMENSION * row,
                                 GRID_DIMENSION, GRID_DIMENSION);
                         break;
+                    case 2:
+                        graphics.setColor(new Color(100+ Math.abs(shimmerControl), 200 + Math.abs(shimmerControl), 100 + Math.abs(shimmerControl)));
+                        graphics.fillRect(GRID_ANCHOR.x + GRID_DIMENSION * col, GRID_ANCHOR.y + GRID_DIMENSION * row,
+                                GRID_DIMENSION, GRID_DIMENSION);
+                        break;
                 }
             }
         }
     }
 
     private Grid grid;
-    private TronBike playerBike;
+
+    private TronBike player1Bike;
+    private TronBike player2Bike;
 
     private int timerDelay = 0;
     private int shimmerControl = -SHIMMER_CONTROL_MAX_VALUE;
@@ -176,12 +219,11 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
     //<editor-fold desc="BikeProjectedLocationValidatorIntf Abstract Methods">
     @Override
     public BikeAndLocation validateLocation(BikeAndLocation data) {
+        // Making sure the projectedLocation in inside the tronArena & the location is not in a bike trail
         if  (data.getProjectedLocation().x >= 0 && data.getProjectedLocation().x < GRID_COLS  && data.getProjectedLocation().y >= 0 && data.getProjectedLocation().y < GRID_ROWS
                 && tronArena[data.getProjectedLocation().x][data.getProjectedLocation().y] == 0) {
             data.getTronBike().setLocation(data.getProjectedLocation());
         }
-
-
         return data;
     }
     //</editor-fold>
