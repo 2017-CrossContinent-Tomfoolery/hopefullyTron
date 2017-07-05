@@ -6,9 +6,8 @@
 package tronplease;
 
 import environment.Environment;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -23,8 +22,12 @@ class hopefullyTron extends Environment implements GridDrawData {
     private static final int GRID_COLS = 150;
     private static final int GRID_DIMENSION = 5;
     private static final Point GRID_ANCHOR = new Point(20, 20);
+
     private static final Point PLAYER_STARTING_LOCATION = new Point(20, 20);
+
     private static final int MOVE_DELAY_TIME = 2;
+    private static final int SHIMMER_CONTROL_MAX_VALUE = 55;
+    private static final int SHIMMER_CONTROL_INTERVAL = 5;
 //</editor-fold>
 
     public hopefullyTron() {
@@ -51,8 +54,14 @@ class hopefullyTron extends Environment implements GridDrawData {
                 playerBike.move();
                 tronArena[playerBike.getLocation().x][playerBike.getLocation().y] = 1;
                 timerDelay = 0;
+                shimmerControl += SHIMMER_CONTROL_INTERVAL;
+            }
+            if (shimmerControl == SHIMMER_CONTROL_MAX_VALUE) {
+                shimmerControl = -SHIMMER_CONTROL_MAX_VALUE;
             }
             timerDelay++;
+
+
         }
     }
 
@@ -92,6 +101,18 @@ class hopefullyTron extends Environment implements GridDrawData {
 
     @Override
     public void paintEnvironment(Graphics graphics) {
+        //<editor-fold defaultstate="collapsed" desc="Antialias">
+        Graphics2D g2d = (Graphics2D) graphics;
+        g2d.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//</editor-fold>
+        graphics.setColor(new Color(50, 50, 50));
+        graphics.fillRect(0, 0, getScreenWidth(), getScreenHeight());
+
         if (grid != null) {
             grid.drawBorder(graphics);
 //            graphics.fillOval(grid.getCellSystemCoordinates(3, 3).x, grid.getCellSystemCoordinates(3, 3).y, grid.getDimension(), grid.getDimension());
@@ -99,13 +120,13 @@ class hopefullyTron extends Environment implements GridDrawData {
         if (tronArena != null) {
             drawTronArena(graphics);
         }
-        graphics.setColor(Color.RED);
+        graphics.setColor(Color.red);
         if (playerBike != null) {
             playerBike.drawBike(graphics);
         }
     }
 //</editor-fold>
-    
+
     public void drawTronArena(Graphics graphics) {
         for (int col = 0; col < tronArena.length; col++) {
             for (int row = 0; row < tronArena[row].length; row++) {
@@ -113,9 +134,9 @@ class hopefullyTron extends Environment implements GridDrawData {
                     case 0:
                         break;
                     case 1:
-                        graphics.setColor(new Color(255, 150, 150));
-                        graphics.fillRect(GRID_ANCHOR.x + GRID_DIMENSION * col, GRID_ANCHOR.y + GRID_DIMENSION * row, 
-                        GRID_DIMENSION, GRID_DIMENSION);
+                        graphics.setColor(new Color(200 + Math.abs(shimmerControl), 100 + Math.abs(shimmerControl), 100 + Math.abs(shimmerControl)));
+                        graphics.fillRect(GRID_ANCHOR.x + GRID_DIMENSION * col, GRID_ANCHOR.y + GRID_DIMENSION * row,
+                                GRID_DIMENSION, GRID_DIMENSION);
                         break;
                 }
             }
@@ -126,6 +147,8 @@ class hopefullyTron extends Environment implements GridDrawData {
     private TronBike playerBike;
 
     private int timerDelay = 0;
+    private int shimmerControl = -55;
+
     private int[][] tronArena;
 
     //<editor-fold defaultstate="collapsed" desc="GridDrawData Abstract Methods">
@@ -149,4 +172,13 @@ class hopefullyTron extends Environment implements GridDrawData {
         return grid.getCellSystemCoordinates(cellCoordinate);
     }
 //</editor-fold>
+
+    public int getScreenWidth() {
+        return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+    }
+
+    public int getScreenHeight() {
+        return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+    }
+
 }
