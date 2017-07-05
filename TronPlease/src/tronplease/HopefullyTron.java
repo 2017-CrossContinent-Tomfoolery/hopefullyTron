@@ -176,7 +176,8 @@ class HopefullyTron extends Environment implements GridDrawData, BikeProjectedLo
     //<editor-fold desc="BikeProjectedLocationValidatorIntf Abstract Methods">
     @Override
     public BikeAndLocation validateLocation(BikeAndLocation data) {
-        if  (data.getProjectedLocation().x >= 0 && data.getProjectedLocation().x <= GRID_COLS && data.getProjectedLocation().y >= 0 && data.getProjectedLocation().y <= GRID_ROWS ) {
+        if  (data.getProjectedLocation().x >= 0 && data.getProjectedLocation().x < GRID_COLS  && data.getProjectedLocation().y >= 0 && data.getProjectedLocation().y < GRID_ROWS
+                && tronArena[data.getProjectedLocation().x][data.getProjectedLocation().y] == 0) {
             data.getTronBike().setLocation(data.getProjectedLocation());
         }
 
