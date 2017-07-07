@@ -20,14 +20,14 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
     //<editor-fold defaultstate="collapsed" desc="Constants">
     private static final Color BACKGROUND_COLOR = new Color(50, 50, 50);
 
-    private static final int GRID_ROWS = 100;
-    private static final int GRID_COLS = 150;
-    private static final int GRID_DIMENSION = 5;
-    private static final Point GRID_ANCHOR = new Point(20, 20);
+    private static final int   GRID_ROWS      = 100;
+    private static final int   GRID_COLS      = 100;
+    private static final int   GRID_DIMENSION = 5;
+    private static final Point GRID_ANCHOR    = new Point(20, 20);
 
     private static final int     STARTING_DISTANCE_FROM_BORDER = 20;
     private static final boolean PLAYER                        = true;
-    private static final boolean COMPUTER                      = false;
+    private static final boolean CPU                           = false;
 
     private static final Point PLAYER1_STARTING_LOCATION = new Point(STARTING_DISTANCE_FROM_BORDER, STARTING_DISTANCE_FROM_BORDER);
     private static final Color PLAYER1_BIKE_COLOR = Color.red;
@@ -55,9 +55,9 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
         grid = new Grid(GRID_COLS, GRID_ROWS, GRID_DIMENSION, GRID_ANCHOR, Color.GRAY);
 
         // Bike1 initialization
-        player1Bike = new TronBike(PLAYER1_STARTING_LOCATION, Direction.RIGHT, PLAYER, this, this, this);
+        player1Bike = new TronBike(PLAYER1_STARTING_LOCATION, Direction.RIGHT, CPU, this, this, this);
         // Bike2 initialization
-        player2Bike = new TronBike(PLAYER2_STARTING_LOCATION, Direction.LEFT, COMPUTER, this, this, this);
+        player2Bike = new TronBike(PLAYER2_STARTING_LOCATION, Direction.LEFT, CPU, this, this, this);
 
         // tronArena initialization
         tronArena = new int[GRID_COLS][GRID_ROWS];
@@ -188,7 +188,7 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
 
     private void drawTronArena(Graphics graphics) {
         for (int col = 0; col < tronArena.length; col++) {
-            for (int row = 0; row < tronArena[row].length; row++) {
+            for (int row = 0; row < tronArena[col].length; row++) {
                 switch (tronArena[col][row]) {
                     case 0:
                         break;
@@ -254,8 +254,7 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
     //<editor-fold desc="AIBikeMovementIntf Abstract Methods">
     @Override
     public Point computerMove(TronBike bike) {
-//        Point moveLocation = bike.getLocation();
-        Point suggestedLocation = bike.getLocation();
+        Point suggestedLocation;
         suggestedLocation = suggestLocation(bike);
         return suggestedLocation;
     }
@@ -264,8 +263,8 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
     private Point suggestLocation(TronBike bike) {
         Point suggestedLocation;
         Direction firstDirection = bike.getDirection();
-        Direction secondDirection = giveAlternateDirection(bike.getDirection());
-        Direction thirdDirection = giveOppositeDirection(secondDirection);
+        Direction secondDirection;
+        Direction thirdDirection;
         double roll = Math.random();
 
         if (roll < .95) {
@@ -335,9 +334,6 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
         }
         return oppositeDirection;
     }
-
-
-
 
     public int getScreenWidth() {
         return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
