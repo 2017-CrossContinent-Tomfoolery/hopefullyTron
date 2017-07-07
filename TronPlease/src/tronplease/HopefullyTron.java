@@ -20,14 +20,16 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
     //<editor-fold defaultstate="collapsed" desc="Constants">
     private static final Color BACKGROUND_COLOR = new Color(50, 50, 50);
 
-    private static final int   GRID_ROWS      = 100;
-    private static final int   GRID_COLS      = 100;
+    private static final int   GRID_ROWS      = 101;
+    private static final int   GRID_COLS      = 101;
     private static final int   GRID_DIMENSION = 5;
     private static final Point GRID_ANCHOR    = new Point(20, 20);
 
     private static final int     STARTING_DISTANCE_FROM_BORDER = 20;
-    private static final boolean PLAYER                        = true;
-    private static final boolean CPU                           = false;
+
+    // Only used to check if the bike is 'playable'
+    private static final boolean PLAYER = true;
+    private static final boolean CPU    = false;
 
     private static final Point PLAYER1_STARTING_LOCATION = new Point(STARTING_DISTANCE_FROM_BORDER, STARTING_DISTANCE_FROM_BORDER);
     private static final Color PLAYER1_BIKE_COLOR = Color.red;
@@ -267,7 +269,7 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
         Direction thirdDirection;
         double roll = Math.random();
 
-        if (roll < .95) {
+        if (roll < .96) {
             firstDirection = bike.getDirection();
         } else {
             firstDirection = giveAlternateDirection(firstDirection);
