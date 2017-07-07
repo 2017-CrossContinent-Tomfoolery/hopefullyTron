@@ -17,66 +17,74 @@ public class TronBike {
     public TronBike() {
     }
 
-    public TronBike(Point location, Direction direction, GridDrawData drawData, BikeProjectedLocationValidatorIntf projectedLocationValidator) {
-        this.location = location;
-        this.direction = direction;
-        this.drawData = drawData;
-        this.projectedLocationValidator = projectedLocationValidator;
+    public TronBike(Point location, Direction direction, boolean playable, GridDrawData drawData, BikeLocationValidatorIntf locationValidator, AIBikeMovementIntf computerMovement) {
+        setLocation(location);
+        setDirection(direction);
+        setPlayable(playable);
+        setDrawData(drawData);
+        setLocationValidator(locationValidator);
+        setComputerMovement(computerMovement);
     }
 
-    private Point location;
-    private Direction direction;
-    private GridDrawData drawData;
-    private BikeProjectedLocationValidatorIntf projectedLocationValidator;
+    private Point                     location;
+    private Direction                 direction;
+    private boolean                   playable;
+    private GridDrawData              drawData;
+    private BikeLocationValidatorIntf locationValidator;
+    private AIBikeMovementIntf        computerMovement;
 
     public void drawBike(Graphics graphics) {
         Point anchor = drawData.getCellSystemCoordinate(location);
-        graphics.fillOval(anchor.x, anchor.y, drawData.getCellDimension(), drawData.getCellDimension());
+        graphics.fillRect(anchor.x, anchor.y, drawData.getCellDimension(), drawData.getCellDimension());
     }
 
     public void move() {
-        Point projectedLocation = getLocation();
+        Point projectedLocation = giveCoordinates(direction);
+        locationValidator.validateLocation(new BikeAndLocation(this, projectedLocation));
+    }
+
+    public Point giveCoordinates(Direction direction) {
+        Point coordinates = null;
         switch (direction) {
             case UP:
-                projectedLocation = new Point(location.x, location.y - 1);
+                coordinates = new Point(location.x, location.y - 1);
                 break;
             case DOWN:
-                projectedLocation = new Point(location.x, location.y + 1);
+                coordinates = new Point(location.x, location.y + 1);
                 break;
             case LEFT:
-                projectedLocation = new Point(location.x - 1, location.y);
+                coordinates = new Point(location.x - 1, location.y);
                 break;
             case RIGHT:
-                projectedLocation = new Point(location.x + 1, location.y);
+                coordinates = new Point(location.x + 1, location.y);
                 break;
         }
-
-        projectedLocationValidator.validateLocation(new BikeAndLocation(this, projectedLocation));
+        return coordinates;
     }
 
-    public void moveLeft() {
-        if (location.x - 1 >= 0) {
-            location = new Point(location.x - 1, location.y);
-        }
+
+    public void computerMove() {
+        Point projectedLocation = getLocation();
+        projectedLocation = computerMovement.computerMove(this);
+        locationValidator.validateLocation(new BikeAndLocation(this, projectedLocation));
     }
 
-    public void moveRight() {
-        if (location.x + 1 < drawData.getColumns()) {
-            location = new Point(location.x + 1, location.y);
-        }
-    }
 
-    public void moveUp() {
-        if (location.y - 1 >= 0) {
-            location = new Point(location.x, location.y - 1);
-        }
-    }
-
-    public void moveDown() {
-        if (location.y + 1 < drawData.getRows()) {
-            location = new Point(location.x, location.y + 1);
-        }
-    }
+//    public Point left() {
+//        return new Point(location.x - 1, location.y);
+//    }
+//
+//    public Point right() {
+//        return new Point(location.x + 1, location.y);
+//    }
+//
+//    public Point above() {
+//        return new Point(location.x, location.y - 1);
+//    }
+//
+//    public Point below() {
+//        return new Point(location.x, location.y + 1);
+//    }
 
     //<editor-fold defaultstate="collapsed" desc="Setters/Getters">
     /**
@@ -121,13 +129,31 @@ public class TronBike {
         this.drawData = drawData;
     }
 
-    public BikeProjectedLocationValidatorIntf getProjectedLocationValidator() {
-        return projectedLocationValidator;
+    public BikeLocationValidatorIntf getLocationValidator() {
+        return locationValidator;
     }
 
-    public void setProjectedLocationValidator(BikeProjectedLocationValidatorIntf projectedLocationValidator) {
-        this.projectedLocationValidator = projectedLocationValidator;
+    public void setLocationValidator(BikeLocationValidatorIntf locationValidator) {
+        this.locationValidator = locationValidator;
     }
+
+    public boolean isPlayable() {
+        return playable;
+    }
+
+    public void setPlayable(boolean playable) {
+        this.playable = playable;
+    }
+
+    public AIBikeMovementIntf getComputerMovement() {
+        return computerMovement;
+    }
+
+    public void setComputerMovement(AIBikeMovementIntf computerMovement) {
+        this.computerMovement = computerMovement;
+    }
+
+
 //</editor-fold>
 
 }

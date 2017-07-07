@@ -8,10 +8,11 @@ import java.awt.*;
 public class BikeAndLocation {
 
     private TronBike tronBike;
-    private Point    projectedLocation;
+    private Point    position;
 
-    public BikeAndLocation(TronBike tronBike, Point projectedLocation) {
-        this.setTronBike(tronBike); this.setProjectedLocation(projectedLocation);
+    public BikeAndLocation(TronBike tronBike, Point position) {
+        this.setTronBike(tronBike);
+        this.setProjectedLocation(position);
     }
 
     public TronBike getTronBike() {
@@ -23,10 +24,10 @@ public class BikeAndLocation {
     }
 
     public Point getProjectedLocation() {
-        return projectedLocation;
+        return position;
     }
 
     public void setProjectedLocation(Point projectedLocation) {
-        this.projectedLocation = projectedLocation;
+        this.position = projectedLocation;
     }
 }
