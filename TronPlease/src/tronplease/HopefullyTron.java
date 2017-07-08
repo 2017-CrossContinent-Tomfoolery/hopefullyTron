@@ -166,13 +166,38 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
                 RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 //</editor-fold>
+
         graphics.setColor(BACKGROUND_COLOR);
         graphics.fillRect(0, 0, getScreenWidth(), getScreenHeight());
+
+        graphics.setFont(new Font("Berlin Sans FB", Font.PLAIN, 25));
+        graphics.setColor(new Color(244, 255, 87));
+        graphics.drawString("TronPlease", 600, 50);
 
         if (grid != null) {
             grid.drawBorder(graphics);
 //            graphics.fillOval(grid.getCellSystemCoordinates(3, 3).x, grid.getCellSystemCoordinates(3, 3).y, grid.getDimension(), grid.getDimension());
         }
+
+        /* Finding equidistant points? */
+        if (player1Bike != null && player2Bike != null) {
+            for (int col = 0; col < GRID_COLS; col++) {
+                for (int row = 0; row < GRID_ROWS; row++) {
+                    if (Math.abs(player1Bike.getLocation().x - col) + Math.abs(player1Bike.getLocation().y - row) >
+                            (Math.abs(player2Bike.getLocation().x - col) + Math.abs(player2Bike.getLocation().y - row))) {
+                        graphics.setColor(new Color(0, 100, 0, 50));
+                        graphics.fillRect(GRID_ANCHOR.x + GRID_DIMENSION * col, GRID_ANCHOR.y + GRID_DIMENSION * row,
+                                GRID_DIMENSION, GRID_DIMENSION);
+                    } else if (Math.abs(player1Bike.getLocation().x - col) + Math.abs(player1Bike.getLocation().y - row) <
+                            (Math.abs(player2Bike.getLocation().x - col) + Math.abs(player2Bike.getLocation().y - row))) {
+                        graphics.setColor(new Color(100, 0, 0, 50));
+                        graphics.fillRect(GRID_ANCHOR.x + GRID_DIMENSION * col, GRID_ANCHOR.y + GRID_DIMENSION * row,
+                                GRID_DIMENSION, GRID_DIMENSION);
+                    }
+                }
+            }
+        }
+
         if (tronArena != null) {
             drawTronArena(graphics);
         }
@@ -264,15 +289,15 @@ class HopefullyTron extends Environment implements GridDrawData, BikeLocationVal
     //</editor-fold>
     private Point suggestLocation(TronBike bike) {
         Point suggestedLocation;
-        Direction firstDirection = bike.getDirection();
+        Direction firstDirection;
         Direction secondDirection;
         Direction thirdDirection;
         double roll = Math.random();
 
-        if (roll < .96) {
+        if (roll < 1) {
             firstDirection = bike.getDirection();
         } else {
-            firstDirection = giveAlternateDirection(firstDirection);
+            firstDirection = giveAlternateDirection(bike.getDirection());
         }
         secondDirection = giveAlternateDirection(firstDirection);
         thirdDirection = giveOppositeDirection(secondDirection);
